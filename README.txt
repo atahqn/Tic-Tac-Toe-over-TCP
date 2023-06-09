@@ -1,39 +1,51 @@
-Multithreaded Tic-Tac-Toe Game Server
+# README.md
 
-Description:
+## Tic Tac Toe Game: Server-Client Model
 
-This is a simple network-based, two-player Tic-Tac-Toe game implemented in Python. The project consists of two main components - a multithreaded server and a client.
+This project is a simple implementation of the classic Tic Tac Toe game using a client-server architecture. The game is played between two clients (players) that are connected to a server. The players take turns to make a move, the status of which is communicated through the server. The server also keeps track of the game's state and determines the winner.
 
-Server:
+## Prerequisites
 
-The server is multithreaded, handling each client in a separate thread, allowing for turn-based play between two players. It manages the game state, validates moves, checks for the game-ending condition, and communicates with clients.
+You need to have Python 3.x installed to run this program.
 
-Client:
+## Server Side Code
 
-The client connects to the server, receives updates about the game state, sends moves to the server, and displays game information to the user. The client can also send a 'status' command to request the current game status from the server.
+The server-side of the game is handled by the `TicTacToeServer` class, which takes care of the game logic and handles client connections. Here's a breakdown of its methods:
 
-Requirements:
+- `__init__(self, port)`: Initializes the server on a specific port, sets up the game state and starts listening for incoming connections.
 
-Python 3.x
+- `check_legal_move(self, move, player)`: Checks if a move made by a player is legal (i.e., within the game's boundaries and not on an already occupied cell).
 
-Server:
+- `check_winner(self, symbol)`: Checks if there's a winner, given a specific player's symbol.
 
-Run the server with a port number as a command-line argument:
+- `main_server(self, conn, player)`: The main loop that handles game logic and communicates with the clients. It sends and receives messages to/from the clients, updates the game's state, and checks for the end of the game.
 
-python3 TicTacToeServer.py [port]
+- `handle_game_result(self, winner=None)`: Handles the result of the game, notifies all clients about the game's result.
 
-Replace [port] with the desired port number.
+- `send_status(self, conn, player)`: Sends the current game state to a client upon request.
 
-Client:
+- `start(self)`: Starts the server and waits for two clients to connect. Once two clients have connected, it starts a new thread for each client, allowing them to play the game simultaneously.
 
-Run the client with the same port number as a command-line argument:
+## Client Side Code
 
-python3 TicTacToeClient.py [port]
+The `TicTacToeClient` class handles the client-side logic of the game. Here's what its methods do:
 
-Replace [port] with the same port number you used for the server. Run this command twice for two clients/players.
+- `__init__(self, port)`: Initializes the client and connects it to the server.
 
-During the game, when it's a client's turn, the client should input a move in the format 'row,column' (0-indexed), or type 'status' to check the current game state.
+- `main_client(self)`: The main loop that receives data from the server and sends user input to the server. It continues to prompt the user for input whenever it's their turn, until the game ends.
 
-Note:
+## How to run
 
-Please ensure that the server is running before starting the clients. Both clients should be running for the game to begin.
+First, start the server:
+
+```bash
+python server.py <port>
+```
+
+Then, on two different terminals, start each client:
+
+```bash
+python client.py <port>
+```
+
+The game will then start, and each client will be prompted to input their moves, in turns.
